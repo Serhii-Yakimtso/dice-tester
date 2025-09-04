@@ -1,0 +1,66 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  color: #333;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+button,
+input[type="submit"] {
+  display: inline-block;
+}
+
+button,
+input[type="submit"],
+label {
+  cursor: pointer;
+}
+
+.header,
+.section {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  width: 1280px;
+}
+
+.main-title {
+  margin-bottom: 12px;
+
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.btn:hover,
+.btn:focus {
+  background-color: #0056b3;
+}

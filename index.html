@@ -6,7 +6,42 @@
     <link rel="stylesheet" href="./css/reset.css" />
     <link rel="stylesheet" href="./css/normalize.css" />
     <link rel="stylesheet" href="./css/main.css" />
-    <title>Dice tester</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Dice Tester</title>
   </head>
-  <body></body>
+  <body>
+    <main>
+      <section class="section">
+        <div class="container">
+          <h1 class="main-title">Тестер дайсів</h1>
+
+          <div class="grid-wrapper">
+            <!-- Налаштування -->
+            <section class="sub-section">
+              <h2 class="title">Налаштування</h2>
+
+              <p>Максимальна кількість дайсів - 100.</p>
+
+              <form id="form">
+                <ul id="dices-list"></ul>
+
+                <button id="dices-add-btn" type="button" class="btn">
+                  Додати дайс
+                </button>
+
+                <button id="start-test" type="button" class="btn">
+                  Запустити тест
+                </button>
+              </form>
+            </section>
+
+            <section>
+              <h2 class="title">Результат</h2>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./main.js"></script>
+  </body>
 </html>

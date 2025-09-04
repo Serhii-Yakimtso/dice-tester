@@ -1,0 +1,77 @@
+*,
+*::before,
+*::after {
+  /* outline: 1px solid tomato; */
+}
+
+.grid-wrapper {
+  display: grid;
+
+  grid-template-columns: 7fr 4fr;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+.fieldset,
+.flex-wrapper,
+.flex-col,
+.flex-col-rev {
+  display: flex;
+}
+
+.fieldset {
+  gap: 12px;
+  align-items: start;
+
+  padding: 12px;
+}
+
+.fieldset:not(:last-child) {
+  margin-bottom: 12px;
+}
+
+.flex-wrapper {
+  align-items: baseline;
+  gap: 4px;
+}
+
+.flex-col {
+  gap: 4px;
+
+  flex-direction: column;
+}
+
+.flex-col-rev {
+  flex-direction: column-reverse;
+}
+
+.select,
+.input {
+  padding: 4px 8px;
+  border: 1px solid gray;
+  border-radius: 4px;
+
+  appearance: none;
+}
+
+.select:hover,
+.select:focus,
+.input:hover,
+.input:focus {
+  border-color: black;
+}
+
+.btn-del {
+  padding: 2px 10px;
+
+  background-color: tomato;
+}
+
+.hidden {
+  display: none;
+}

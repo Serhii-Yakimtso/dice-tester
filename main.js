@@ -114,7 +114,7 @@ const diceModMarckUp = (count, modCount) => `
             />
           </div>
 
-          <button class="btn btn-del" type="button">x</button>
+          <button id="d-${count}-mod-${count}-${modCount}__del-btn" class="btn btn-del" type="button">x</button>
         </li>
 
 `;
@@ -153,7 +153,6 @@ function createDiceModField(highEl, count) {
   }
 
   const modCount = diceModeList.querySelectorAll("li").length;
-  console.log(modCount);
 
   diceModeList.insertAdjacentHTML(
     "beforeend",
@@ -180,50 +179,71 @@ function getDiceData(el, count, arr) {
     [`#d-${count}__mod-list`, "mods", "sub"],
   ];
 
-  console.log(arrProp);
-
   for (const item of arrProp) {
     const searchName = item[0];
     const propName = item[1];
 
-    if (!item[2]) {
+    if (item.length < 3) {
       getData(dice, searchName, diceData, propName);
     } else {
-      // getDataSub(dice, searchName, diceData, arrSubProp);
+      const mod = {};
+
+      getDataSub(dice, searchName, mod, count);
+
+      diceData["mods"] = mod;
     }
   }
+  console.log(diceData);
 
   arr.push(diceData);
-  console.log(arr);
+  console.log("test arr ", arr);
 }
 
 // Пошук та отримання даних з поля введення
 function getData(highEl, searchName, obj, propName) {
   const el = highEl.querySelector(searchName);
-  console.log(el);
 
   obj[propName] = el.value;
 }
 
-// function getDataSub(highEl, searchName, obj, arrSubProp) {
-//   const el = highEl.querySelector(searchName);
-//   const arrItem = el.querySelectorAll("li");
+// Пошук та отримання даних з поля введення модимодифікаторі
+function getDataSub(highEl, searchName, obj, count) {
+  const el = highEl.querySelector(searchName);
 
-//   for (const item of arrItem) {
-//     const arrInput = item.querySelectorAll("input");
-//     console.log(arrInput);
+  const arrListItem = el.querySelectorAll("li");
 
-//     const arrSubProp = [
-//       [`#d-${count}-mod-${count}-${modCount}__name`, "modName"],
-//       [`#d-${count}-mod-${count}-${modCount}__value`, "modValue"],
-//     ];
+  let modCount = 0;
 
-//     for (const i of arrInput) {
-//       const searchName = arrSubProp[0];
-//       const propName = arrSubProp[1];
+  for (const item of arrListItem) {
+    const arrInput = item.querySelectorAll("input");
 
-//       console.log(i);
-//     }
-//   }
+    modCount = modCount + 1;
 
-// }
+    const arrSubProp = [
+      [`#d-${count}-mod-${count}-${modCount}__name`, "modName"],
+      [`#d-${count}-mod-${count}-${modCount}__value`, "modValue"],
+    ];
+
+    const subObj = {};
+
+    for (const i of arrInput) {
+      for (const prop of arrSubProp) {
+        const searchName = prop[0];
+        const propName = prop[1];
+
+        const el = item.querySelector(searchName);
+
+        subObj[propName] = el.value;
+      }
+    }
+    obj[`mod${modCount}`] = subObj;
+  }
+}
+
+// отримання випадкового числа
+function getRandom(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

@@ -22,21 +22,24 @@
 
               <p>Максимальна кількість дайсів - 100.</p>
 
-              <form id="form">
-                <ul id="dices-list"></ul>
+              <form id="form" class="form">
+                <button id="start-test" type="button" class="btn">
+                  Запустити тест
+                </button>
+
+                <ul id="dices-list" class="form-dices-list"></ul>
 
                 <button id="dices-add-btn" type="button" class="btn">
                   Додати дайс
-                </button>
-
-                <button id="start-test" type="button" class="btn">
-                  Запустити тест
                 </button>
               </form>
             </section>
 
             <section>
               <h2 class="title">Результат</h2>
+
+              <div id="results-common"></div>
+              <div id="results-detail"></div>
             </section>
           </div>
         </div>

@@ -4,6 +4,10 @@
   /* outline: 1px solid tomato; */
 }
 
+/* body {
+  height: 100vh;
+} */
+
 .grid-wrapper {
   display: grid;
 
@@ -16,6 +20,21 @@
 
   text-align: center;
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn {
+  max-width: max-content;
+}
+
+/* .form-dices-list {
+  height: 100%;
+  overflow-y: scroll;
+} */
 
 .fieldset,
 .flex-wrapper,

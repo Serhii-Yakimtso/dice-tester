@@ -131,7 +131,7 @@ startTestBtn.addEventListener("click", () => {
 
   getAllDiceData(form, commonDiceCount, arrData);
 
-  getTestResults(arrData);
+  getOneThrowResult(arrData);
 });
 
 // Створення поля налаштувань одного дайсу
@@ -252,19 +252,19 @@ function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getTestResults(arr) {
+// Отримання результату одного кидку тесту
+function getOneThrowResult(arr) {
   console.log(arr);
 
   const resultMarkUpArr = [];
+  const sumResults = [];
 
   //   Перебір окремого типу дайсів
   for (const i of arr) {
     const { diceType, diceCount, diceThrow, mods } = i;
 
-    console.log(mods);
-
-    const sumResults = [];
     const sumResultsMarkUp = [];
+    const modString = [];
 
     // Перебір кожного кидку дайсу
     for (let i = 0; i < diceCount; i++) {
@@ -294,17 +294,39 @@ function getTestResults(arr) {
       }
 
       sumResults.push(throwResult);
-      sumResultsMarkUp.push(` ${throwResult} ${string ? string : ""}`);
+      sumResultsMarkUp.push(`${throwResult}${string ? string : ""}`);
     }
 
-    const markUpString = `(${diceCount}d${diceType})${sumResultsMarkUp.join(
-      " + "
-    )}`;
+    if (mods.length > 0) {
+      modString.push("");
+    }
 
-    console.log(markUpString);
-    console.log(sumResults);
+    for (const mod of mods) {
+      const name = mod.modName;
+      const value = mod.modValue;
+
+      const string = `${value} (${name})`;
+
+      sumResults.push(Number(value));
+      modString.push(string);
+    }
+
+    const markUpString = `(${diceCount}d${diceType}) ${sumResultsMarkUp.join(
+      " + "
+    )}${modString.join(" + ")}`;
+
+    console.log("markUpString", markUpString);
+    console.log("sumResults", sumResults);
 
     resultMarkUpArr.push(markUpString);
   }
+
+  const summ = sumResults.reduce((acc, num) => acc + num, 0);
+
+  const markup = `<li>${summ}, ${resultMarkUpArr.join(" + ")}</li>`;
+  console.log("summ:", summ);
+
   console.log(resultMarkUpArr);
+
+  console.log("markup", markup);
 }

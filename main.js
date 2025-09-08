@@ -130,6 +130,8 @@ startTestBtn.addEventListener("click", () => {
   arrData.splice(0);
 
   getAllDiceData(form, commonDiceCount, arrData);
+
+  getTestResults(arrData);
 });
 
 // Створення поля налаштувань одного дайсу
@@ -186,17 +188,19 @@ function getDiceData(el, count, arr) {
     if (item.length < 3) {
       getData(dice, searchName, diceData, propName);
     } else {
-      const mod = {};
+      //   const mod = {};
+      const modsArr = [];
 
-      getDataSub(dice, searchName, mod, count);
+      //   getDataSub(dice, searchName, mod, count);
+      getDataSub(dice, searchName, modsArr, count);
 
-      diceData["mods"] = mod;
+      diceData["mods"] = modsArr;
     }
   }
-  console.log(diceData);
+  //   console.log(diceData);
 
   arr.push(diceData);
-  console.log("test arr ", arr);
+  //   console.log("test arr ", arr);
 }
 
 // Пошук та отримання даних з поля введення
@@ -207,7 +211,7 @@ function getData(highEl, searchName, obj, propName) {
 }
 
 // Пошук та отримання даних з поля введення модимодифікаторі
-function getDataSub(highEl, searchName, obj, count) {
+function getDataSub(highEl, searchName, arr, count) {
   const el = highEl.querySelector(searchName);
 
   const arrListItem = el.querySelectorAll("li");
@@ -236,7 +240,7 @@ function getDataSub(highEl, searchName, obj, count) {
         subObj[propName] = el.value;
       }
     }
-    obj[`mod${modCount}`] = subObj;
+    arr.push(subObj);
   }
 }
 
@@ -246,4 +250,61 @@ function getRandom(min, max) {
   max = Math.floor(max);
 
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getTestResults(arr) {
+  console.log(arr);
+
+  const resultMarkUpArr = [];
+
+  //   Перебір окремого типу дайсів
+  for (const i of arr) {
+    const { diceType, diceCount, diceThrow, mods } = i;
+
+    console.log(mods);
+
+    const sumResults = [];
+    const sumResultsMarkUp = [];
+
+    // Перебір кожного кидку дайсу
+    for (let i = 0; i < diceCount; i++) {
+      let throwResult = 0;
+      let string = null;
+
+      if (diceThrow < 0) {
+        const firstThrowResalt = getRandom(1, diceType);
+        const secondThrowResalt = getRandom(1, diceType);
+
+        string = ` (${firstThrowResalt}, ${secondThrowResalt})`;
+
+        throwResult = Math.min(firstThrowResalt, secondThrowResalt);
+      }
+
+      if (diceThrow > 0) {
+        const firstThrowResalt = getRandom(1, diceType);
+        const secondThrowResalt = getRandom(1, diceType);
+
+        string = ` (${firstThrowResalt}, ${secondThrowResalt})`;
+
+        throwResult = Math.max(firstThrowResalt, secondThrowResalt);
+      }
+
+      if (diceThrow === "0") {
+        throwResult = getRandom(1, diceType);
+      }
+
+      sumResults.push(throwResult);
+      sumResultsMarkUp.push(` ${throwResult} ${string ? string : ""}`);
+    }
+
+    const markUpString = `(${diceCount}d${diceType})${sumResultsMarkUp.join(
+      " + "
+    )}`;
+
+    console.log(markUpString);
+    console.log(sumResults);
+
+    resultMarkUpArr.push(markUpString);
+  }
+  console.log(resultMarkUpArr);
 }

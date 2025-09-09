@@ -144,6 +144,8 @@ startTestBtn.addEventListener("click", () => {
 
   console.log("arrData after", arrData);
   console.log("arrDataResults after", arrDataResults);
+
+  getResultsAnalize(settingsObj, arrDataResults);
 });
 
 // Отримання розмітки кидків
@@ -155,6 +157,24 @@ function setThrowMarkUp(obj, arrDataThrow, el, arrDataResults) {
 
     arrDataResults.push(summ);
   }
+}
+
+// Аналіз результатів
+function getResultsAnalize(obj, arr) {
+  const { threshold, logic } = obj;
+
+  const successArr = arr.filter((i) => i * logic >= threshold * logic);
+
+  console.log("arr", arr);
+  console.log("successArr", successArr);
+  console.log("success percent", (successArr.length / arr.length) * 100);
+  console.log("mean results", arr.reduce((acc, i) => acc + i, 0) / arr.length);
+  console.log(
+    "mean success results",
+    successArr.reduce((acc, i) => acc + i, 0) / successArr.length
+  );
+  console.log("min", Math.min(...arr));
+  console.log("max", Math.max(...arr));
 }
 
 // Створення поля налаштувань одного дайсу

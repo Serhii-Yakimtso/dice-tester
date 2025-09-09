@@ -8,6 +8,8 @@ const startTestBtn = form.querySelector("#start-test");
 
 // Інформація для тестування
 const arrData = [];
+const arrDataResults = [];
+const settingsObj = {};
 
 // Загальна кільікість типів дайсів для тестування
 let commonDiceCount = 1;
@@ -15,7 +17,7 @@ let commonDiceCount = 1;
 // Розмітка поля налаштувань одного дайсу
 const diceMarkUp = (count) => `
     <li>
-    <fieldset id="dice-${count}" class="fieldset" data-dice="dice">
+    <fieldset id="dice-${count}" class="fieldset">
         <legend>Дайс №${count}</legend>
 
         <fieldset class="flex-wrapper">
@@ -128,11 +130,32 @@ addDiceBtn.addEventListener("click", () => {
 
 startTestBtn.addEventListener("click", () => {
   arrData.splice(0);
+  arrDataResults.splice(0);
+
+  const list = document.querySelector("#results-detail");
+
+  list.innerHTML = "";
+
+  getCommonSettings(form, settingsObj);
 
   getAllDiceData(form, commonDiceCount, arrData);
 
-  getOneThrowResult(arrData);
+  setThrowMarkUp(settingsObj, arrData, list, arrDataResults);
+
+  console.log("arrData after", arrData);
+  console.log("arrDataResults after", arrDataResults);
 });
+
+// Отримання розмітки кидків
+function setThrowMarkUp(obj, arrDataThrow, el, arrDataResults) {
+  for (let i = 0; i < obj.testCount; i++) {
+    const { markup, summ } = getOneThrowResult(arrDataThrow);
+
+    el.insertAdjacentHTML("beforeend", markup);
+
+    arrDataResults.push(summ);
+  }
+}
 
 // Створення поля налаштувань одного дайсу
 function createDiceField(commonDiceCount) {
@@ -147,6 +170,7 @@ function createDiceField(commonDiceCount) {
   });
 }
 
+// Створення поля модифікатора
 function createDiceModField(highEl, count) {
   const diceModeList = highEl.querySelector(`#d-${count}__mod-list`);
 
@@ -162,6 +186,20 @@ function createDiceModField(highEl, count) {
   );
 }
 
+// Отримання загальних налаштувань тесту
+function getCommonSettings(el, obj) {
+  const testCount = el.querySelector("#test-count").value;
+  const threshold = el.querySelector("#threshold").value;
+  const logic = el.querySelector("#logic-calc input:checked").value;
+
+  obj["testCount"] = Number(testCount);
+  obj["threshold"] = Number(threshold);
+  obj["logic"] = Number(logic);
+
+  console.log(obj);
+}
+
+// Отримання інформації для кидку всіх дйсів
 function getAllDiceData(form, countDice, arrData) {
   for (let i = 1; i <= countDice; i++) {
     getDiceData(form, i, arrData);
@@ -254,7 +292,7 @@ function getRandom(min, max) {
 
 // Отримання результату одного кидку тесту
 function getOneThrowResult(arr) {
-  console.log(arr);
+  // console.log(arr);
 
   const resultMarkUpArr = [];
   const sumResults = [];
@@ -315,8 +353,8 @@ function getOneThrowResult(arr) {
       " + "
     )}${modString.join(" + ")}`;
 
-    console.log("markUpString", markUpString);
-    console.log("sumResults", sumResults);
+    // console.log("markUpString", markUpString);
+    // console.log("sumResults", sumResults);
 
     resultMarkUpArr.push(markUpString);
   }
@@ -324,9 +362,11 @@ function getOneThrowResult(arr) {
   const summ = sumResults.reduce((acc, num) => acc + num, 0);
 
   const markup = `<li>${summ}, ${resultMarkUpArr.join(" + ")}</li>`;
-  console.log("summ:", summ);
+  // console.log("summ:", summ);
 
-  console.log(resultMarkUpArr);
+  // console.log(resultMarkUpArr);
 
-  console.log("markup", markup);
+  // console.log("markup", markup);
+
+  return { markup, summ };
 }

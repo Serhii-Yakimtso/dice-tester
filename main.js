@@ -142,10 +142,9 @@ startTestBtn.addEventListener("click", () => {
 
   setThrowMarkUp(settingsObj, arrData, list, arrDataResults);
 
-  console.log("arrData after", arrData);
-  console.log("arrDataResults after", arrDataResults);
+  getResultsAnalize(settingsObj, arrDataResults, commonResultsObj);
 
-  getResultsAnalize(settingsObj, arrDataResults);
+  addMarkUpCommonResults(commonResultsObj);
 });
 
 // Отримання розмітки кидків
@@ -160,21 +159,76 @@ function setThrowMarkUp(obj, arrDataThrow, el, arrDataResults) {
 }
 
 // Аналіз результатів
-function getResultsAnalize(obj, arr) {
-  const { threshold, logic } = obj;
+function getResultsAnalize(settingsObj, arr, resultsObj) {
+  const { threshold, logic } = settingsObj;
 
-  const successArr = arr.filter((i) => i * logic >= threshold * logic);
+  const resultsThrowArr = arr;
+  let meanResults = undefined;
 
-  console.log("arr", arr);
-  console.log("successArr", successArr);
-  console.log("success percent", (successArr.length / arr.length) * 100);
-  console.log("mean results", arr.reduce((acc, i) => acc + i, 0) / arr.length);
-  console.log(
-    "mean success results",
-    successArr.reduce((acc, i) => acc + i, 0) / successArr.length
-  );
-  console.log("min", Math.min(...arr));
-  console.log("max", Math.max(...arr));
+  if (logic > 0) {
+    meanResults = Math.floor(arr.reduce((acc, i) => acc + i, 0) / arr.length);
+  } else {
+    meanResults = Math.ceil(arr.reduce((acc, i) => acc + i, 0) / arr.length);
+  }
+
+  const minResults = Math.min(...arr);
+  const maxResults = Math.max(...arr);
+
+  resultsObj["resultsThrowArr"] = resultsThrowArr;
+  resultsObj["meanResults"] = meanResults;
+  resultsObj["minResults"] = minResults;
+  resultsObj["maxResults"] = maxResults;
+
+  if (threshold > 0) {
+    const successArr = arr.filter((i) => i * logic >= threshold * logic);
+    const successPercent = (successArr.length / arr.length) * 100;
+    let successMeanResults = undefined;
+
+    if (logic > 0) {
+      successMeanResults = Math.floor(
+        successArr.reduce((acc, i) => acc + i, 0) / successArr.length
+      );
+    } else {
+      successMeanResults = Math.ceil(
+        successArr.reduce((acc, i) => acc + i, 0) / successArr.length
+      );
+    }
+
+    resultsObj["threshold"] = true;
+    resultsObj["successArr"] = successArr;
+    resultsObj["successPercent"] = successPercent;
+    resultsObj["successMeanResults"] = successMeanResults;
+  }
+}
+
+// Додавання розмітки загальних результатів
+function addMarkUpCommonResults(obj) {
+  const {
+    meanResults,
+    minResults,
+    maxResults,
+    threshold,
+    successArr,
+    successPercent,
+    successMeanResults,
+  } = obj;
+
+  const list = document.querySelector("#results-common");
+
+  const markup = `
+    <li>Середній результат кидків: ${meanResults}</li>
+    <li>Мінімальний результат кидків: ${minResults}</li>
+    <li>Максимальний результат кидків: ${maxResults}</li>
+    ${
+      threshold
+        ? `  <li>Успішні кидки (%): ${successPercent}</li>
+    <li>Середній успішний результат: ${successMeanResults}</li>
+    `
+        : ""
+    }
+  `;
+
+  list.innerHTML = markup;
 }
 
 // Створення поля налаштувань одного дайсу
@@ -215,8 +269,6 @@ function getCommonSettings(el, obj) {
   obj["testCount"] = Number(testCount);
   obj["threshold"] = Number(threshold);
   obj["logic"] = Number(logic);
-
-  console.log(obj);
 }
 
 // Отримання інформації для кидку всіх дйсів
@@ -255,10 +307,8 @@ function getDiceData(el, count, arr) {
       diceData["mods"] = modsArr;
     }
   }
-  //   console.log(diceData);
 
   arr.push(diceData);
-  //   console.log("test arr ", arr);
 }
 
 // Пошук та отримання даних з поля введення
@@ -312,8 +362,6 @@ function getRandom(min, max) {
 
 // Отримання результату одного кидку тесту
 function getOneThrowResult(arr) {
-  // console.log(arr);
-
   const resultMarkUpArr = [];
   const sumResults = [];
 
@@ -373,20 +421,12 @@ function getOneThrowResult(arr) {
       " + "
     )}${modString.join(" + ")}`;
 
-    // console.log("markUpString", markUpString);
-    // console.log("sumResults", sumResults);
-
     resultMarkUpArr.push(markUpString);
   }
 
   const summ = sumResults.reduce((acc, num) => acc + num, 0);
 
   const markup = `<li>${summ}, ${resultMarkUpArr.join(" + ")}</li>`;
-  // console.log("summ:", summ);
-
-  // console.log(resultMarkUpArr);
-
-  // console.log("markup", markup);
 
   return { markup, summ };
 }

@@ -10,6 +10,7 @@ const startTestBtn = form.querySelector("#start-test");
 const arrData = [];
 const arrDataResults = [];
 const settingsObj = {};
+const commonResultsObj = {};
 
 // Загальна кільікість типів дайсів для тестування
 let commonDiceCount = 1;
@@ -116,7 +117,7 @@ const diceModMarckUp = (count, modCount) => `
             />
           </div>
 
-          <button id="d-${count}-mod-${count}-${modCount}__del-btn" class="btn btn-del" type="button">x</button>
+          <button id="d-${count}-mod-${count}-${modCount}__del-btn" class="btn btn-del" type="button" data-role="delete-item">x</button>
         </li>
 
 `;
@@ -126,6 +127,15 @@ createDiceField(commonDiceCount);
 addDiceBtn.addEventListener("click", () => {
   commonDiceCount++;
   createDiceField(commonDiceCount);
+});
+
+form.addEventListener("click", (e) => {
+  if (e.target.dataset.role === "delete-item") {
+    const btn = e.target;
+
+    const el = btn.closest("li");
+    el.remove();
+  }
 });
 
 startTestBtn.addEventListener("click", () => {
@@ -230,6 +240,8 @@ function addMarkUpCommonResults(obj) {
 
   list.innerHTML = markup;
 }
+
+// Збір загальних результатів у об'єкт
 
 // Створення поля налаштувань одного дайсу
 function createDiceField(commonDiceCount) {

@@ -407,7 +407,7 @@ function getOneThrowResult(arr) {
         throwResult = Math.max(firstThrowResalt, secondThrowResalt);
       }
 
-      if (diceThrow === "0") {
+      if (diceThrow === 0) {
         throwResult = getRandom(1, diceType);
       }
 

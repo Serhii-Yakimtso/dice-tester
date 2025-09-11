@@ -327,7 +327,7 @@ function getDiceData(el, count, arr) {
 function getData(highEl, searchName, obj, propName) {
   const el = highEl.querySelector(searchName);
 
-  obj[propName] = el.value;
+  obj[propName] = Number(el.value);
 }
 
 // Пошук та отримання даних з поля введення модимодифікаторі
